@@ -1,0 +1,12 @@
+<%= form_with(model: message, id: "#{dom_id(message)}_form") do |f| %>
+
+    <div class="flex flex-row items-center h-16 rounded-xl bg-white w-full px-4">
+        <div class="ml-4 flex w-full">
+            <%= f.hidden_field :user_id, value: current_user.id %> 
+            <%= f.hidden_field :conversation_id, value: conversation.id %> 
+            <%= f.text_field :body, placeholder: "Type your message...", class: "w-full border rounded px-2 py-1" %> 
+            <%= f.submit "Send", class: "btn bg-indigo-500 text-white px-4 py-2 rounded ml-2" %>
+        </div>
+    </div>
+
+<% end %>

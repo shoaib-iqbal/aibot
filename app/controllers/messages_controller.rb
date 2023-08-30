@@ -1,0 +1,59 @@
+class MessagesController < ApplicationController
+
+    def index
+        @conversation = Conversation.find(params[:id]) if params[:id]
+    end
+
+    def create
+    @messages = []
+    @conversation = Conversation.find_by(id: message_params[:conversation_id]) || Conversation.new(user: current_user, name: message_params[:body])
+      @message_request = @conversation.messages.new(message_params)
+      @conversation.save
+      @messages << @message_request
+    #   if @message.save
+    #     # respond_to do |format|
+    #     #     format.turbo_stream
+    #     # end
+    #     GPT_Response(@message)
+    #     redirect_to messages_path
+    #   end
+      respond_to do |format|
+        if @message_request.save
+          @conversation = @message_request.conversation
+          GPT_Response(@message_request)
+          format.turbo_stream
+          format.html { redirect_to message_path(@messages), notice: "Message was successfully created." }
+        else
+          format.html { render :new, status: :unprocessable_entity }
+        end
+      end
+    end
+  
+    private
+  
+    def message_params
+      params.require(:message).permit(:user_id, :conversation_id, :body)
+    end
+
+    def GPT_Response(message)
+        client = OpenAI::Client.new
+    
+        response = client.chat(
+            parameters: {
+                model: "gpt-3.5-turbo", 
+                messages: [{ role: "user", content: message.body}], 
+                temperature: 0.7,
+            })
+    
+        @message_response = Message.new(
+          user: message.user, 
+          conversation: message.conversation, 
+          body: response.dig("choices", 0, "message", "content"), 
+          response: true)
+    
+          @message_response.save
+        @messages << @message_response
+      end
+
+  end
+  

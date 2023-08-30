@@ -1,0 +1,10 @@
+<%= turbo_stream.append "messages" do %>
+  <%= render @messages %>
+<% end %>
+<%= turbo_stream.replace "#{dom_id(Message.new)}_form" do %>
+  <%= render "form", message: Message.new, conversation: @conversation %>
+<% end %>
+<%# <script>$('.messages_inbox').animate({
+  scrollTop: $('#inbox_end').offsetTop
+}, 100);
+</script> %>
