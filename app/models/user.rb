@@ -4,6 +4,6 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
-  has_many :conversations
-  has_many :messages
+  has_many :conversations, dependent: :destroy, inverse_of: :user
+  has_many :messages, dependent: :destroy, inverse_of: :user
 end
