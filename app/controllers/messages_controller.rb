@@ -4,11 +4,10 @@ class MessagesController < ApplicationController
     @messages = []
     @conversation = Conversation.find_by(id: message_params[:conversation_id]) || Conversation.new(user: current_user, name: message_params[:body])
     @message_request = @conversation.messages.new(message_params)
-    @conversation.save
-    @messages << @message_request
 
+    @messages << @message_request
     respond_to do |format|
-      if @message_request.save
+      if @message_request.save && @conversation.save
         @conversation = @message_request.conversation
         GPT_Response(@message_request)
         format.turbo_stream

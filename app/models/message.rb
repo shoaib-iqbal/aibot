@@ -4,5 +4,10 @@ class Message < ApplicationRecord
 
   belongs_to :user
   belongs_to :conversation
+
+  def to_json
+    role = response? ? 'system' : 'user'
+    {role: role, content: body}
+  end
   
 end

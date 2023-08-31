@@ -5,7 +5,7 @@ class Gpt
       response = client.chat(
         parameters: {
           model: "gpt-3.5-turbo", 
-          messages: [{ role: "user", content: message.body }], 
+          messages: message.conversation.messages.map(&:to_json), 
           temperature: 0.7,
         })
   
