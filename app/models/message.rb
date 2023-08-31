@@ -9,6 +9,9 @@ class Message < ApplicationRecord
     role = role="system" ? 'user' : 'system'
     {role: role, content: body}
   end
+  def user
+    conversation.user
+  end
   
   def get_reply
     Gpt.new.generate_response(self)
