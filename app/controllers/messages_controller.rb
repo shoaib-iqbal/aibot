@@ -1,28 +1,18 @@
 class MessagesController < ApplicationController
 
-    def index
-        @conversation = Conversation.find(params[:id]) if params[:id]
-    end
-
     def create
     @messages = []
     @conversation = Conversation.find_by(id: message_params[:conversation_id]) || Conversation.new(user: current_user, name: message_params[:body])
       @message_request = @conversation.messages.new(message_params)
       @conversation.save
       @messages << @message_request
-    #   if @message.save
-    #     # respond_to do |format|
-    #     #     format.turbo_stream
-    #     # end
-    #     GPT_Response(@message)
-    #     redirect_to messages_path
-    #   end
+    
       respond_to do |format|
         if @message_request.save
           @conversation = @message_request.conversation
           GPT_Response(@message_request)
           format.turbo_stream
-          format.html { redirect_to message_path(@messages), notice: "Message was successfully created." }
+          # format.html { redirect_to messages_path(@messages), notice: "Message was successfully created." }
         else
           format.html { render :new, status: :unprocessable_entity }
         end
