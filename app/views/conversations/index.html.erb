@@ -9,6 +9,13 @@
         <div class="flex flex-col items-center bg-indigo-100 border border-gray-200 mt-4 w-full py-6 px-4 rounded-lg">
           <div class="text-sm font-semibold mt-2"><%= current_user.email %></div>
         </div>
+
+          <div class="flex flex-col space-y-1 mt-5 -mx-2">
+            <%= link_to "Log Out", destroy_user_session_path, method: :delete,
+            class: " bg-red-400 mx-auto text-center py-2 px-4 rounded" %>
+          </div>
+
+
         <div class="flex flex-col mt-8">
           <div class="flex flex-row items-center justify-between text-xs">
             <span class="font-bold">Conversations</span>
@@ -18,7 +25,7 @@
           </div>
 
          
-          <div class="flex flex-col space-y-1 mt-4 -mx-2 min-h-screen overflow-y-auto">
+          <div class="flex flex-col space-y-1 mt-4 -mx-2 h-96 overflow-y-auto">
 
           <div class="mt-5 text-center">
             <%#= link_to "New Conversations", new_conversation_path, class: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-xl" %>
@@ -26,7 +33,7 @@
 
             <% current_user.conversations&.reverse.each do |conversation| %> 
 
-              <%= link_to root_path(id: conversation.id), class: "flex flex-row items-center hover:bg-gray-100 rounded-xl p-2" do %>
+              <%= link_to root_path(id: Base64.urlsafe_encode64(conversation.id.to_s)), class: "flex flex-row items-center hover:bg-gray-100 rounded-xl p-2" do %>
                 
                 <div class="flex items-center justify-center h-8 w-8 bg-purple-200 rounded-full">
                   <%= conversation.user.email.first %>
@@ -37,23 +44,20 @@
             <% end %>
           </div>
 
-          <div class="flex flex-col space-y-1 mt-5 -mx-2">
-            <%= link_to "Log Out", destroy_user_session_path, method: :delete,
-            class: " bg-red-400 mx-auto text-center py-2 px-4 rounded" %>
-          </div>
         </div>
       </div>
 
       <%# Messages %> 
 
-    <% if @conversation %>
     <div class="flex flex-col flex-auto h-full p-6">
       <div class="flex flex-col flex-auto flex-shrink-0 rounded-2xl bg-gray-100 h-full p-4">
-        <div class="flex flex-col h-full overflow-x-auto mb-4 messages_inbox">
+        <div class="flex flex-col h-full overflow-x-auto mb-4 messages_inbox" id="scroll_div">
           <div class="flex flex-col h-full">
           <turbo-frame id="messages">
             <div class="grid grid-cols-12 gap-y-2">
-              <%= render @conversation.messages %>
+              <% if @conversation_messages %>
+                <%= render @conversation_messages.messages %>
+              <% end %>
             </div>
           </div>
          </turbo-frame>
@@ -62,7 +66,6 @@
         <%= render 'messages/form', message: Message.new, conversation: @conversation %>
       </div>
     </div>
-  <% end %>
 </div>
 
 <% else %>
@@ -71,3 +74,13 @@
     <%= link_to "Sign Up", new_user_registration_path, class: "btn bg-gray-500 text-white py-2 px-4 rounded" %>
   </div>
 <% end %>
+
+
+<script>
+  const messagesContainer = document.getElementById('scroll_div');
+  const targetScrollHeight = messagesContainer.scrollHeight;
+  messagesContainer.scrollTo({
+    top: targetScrollHeight,
+    behavior: 'smooth'
+  });
+</script>
