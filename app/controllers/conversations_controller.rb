@@ -1,9 +1,15 @@
 class ConversationsController < ApplicationController
 
     def index
-        @conversations = current_user&.conversations
-        @conversation = current_user&.conversations&.build
-        @conversation_messages = Conversation.find(Base64.urlsafe_decode64(params[:id])) if params[:id]
+        @conversations = current_user.conversations
+        @conversation = current_user.conversations.build
+    end
+    def new
+        @conversation = Conversation.create(
+            user_id: current_user.id,
+            name: "Random #{current_user.id}"
+        )
+        redirect_to root_path(id: @conversation.id)
     end
 
 end
