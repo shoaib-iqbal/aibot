@@ -14,7 +14,7 @@ class Gpt
       message_response = Message.new(
         conversation: message.conversation, 
         body: response_content,
-        role: 1
+        role: 'system'
       )
   
       message_response.save
