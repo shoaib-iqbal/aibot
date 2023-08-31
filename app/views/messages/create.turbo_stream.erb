@@ -1,6 +1,9 @@
 <%= turbo_stream.append "messages" do %>
   <%= render @messages %>
 <% end %>
+<%= turbo_stream.replace "conversations" do %>
+  <%= render partial: "/conversations/conversation", collection: current_user.conversations&.reverse %>
+<% end %>
 <%= turbo_stream.replace "#{dom_id(Message.new)}_form" do %>
   <%= render "form", message: Message.new, conversation: @conversation %>
 <% end %>

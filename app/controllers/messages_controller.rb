@@ -2,7 +2,7 @@ class MessagesController < ApplicationController
 
   def create
     @messages = []
-    @conversation = Conversation.find_by(id: message_params[:conversation_id]) || Conversation.new(user: current_user, name: message_params[:body])
+    @conversation = Conversation.find_by(id: message_params[:conversation_id]) || Conversation.new(user: current_user, name: message_params[:body].first(8))
     @message_request = @conversation.messages.new(message_params)
 
     @messages << @message_request

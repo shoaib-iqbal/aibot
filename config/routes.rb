@@ -3,7 +3,7 @@ Rails.application.routes.draw do
  
   root "conversations#index"
 
-  resources :conversations, only: [:new, :index]
+  resources :conversations, only: [:index]
   resources :messages, only: [:create]
 
 end

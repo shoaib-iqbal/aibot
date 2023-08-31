@@ -8,4 +8,5 @@ class ConversationsController < ApplicationController
             current_user&.conversations&.build
         end
     end
+
 end
