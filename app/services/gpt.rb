@@ -8,14 +8,13 @@ class Gpt
           messages: message.conversation.messages.map(&:to_json), 
           temperature: 0.7,
         })
-  
+        
       response_content = response.dig("choices", 0, "message", "content") || "Error: No Response From API"
   
       message_response = Message.new(
-        user: message.user, 
         conversation: message.conversation, 
         body: response_content,
-        response: true
+        role: 1
       )
   
       message_response.save
