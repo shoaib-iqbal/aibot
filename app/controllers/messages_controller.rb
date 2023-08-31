@@ -17,31 +17,16 @@ class MessagesController < ApplicationController
       end
     end
   end
+     
+  def GPT_Response(message)
+    @message_response = Gpt.new.generate_response(message)
+    @messages << @message_response
+  end
   
     private
   
     def message_params
       params.require(:message).permit(:user_id, :conversation_id, :body)
-    end
-
-    def GPT_Response(message)
-      client = OpenAI::Client.new
-  
-      response = client.chat(
-          parameters: {
-              model: "gpt-3.5-turbo", 
-              messages: [{ role: "user", content: message.body}], 
-              temperature: 0.7,
-          })
-  
-      @message_response = Message.new(
-        user: message.user, 
-        conversation: message.conversation, 
-        body: response.dig("choices", 0, "message", "content"), 
-        response: true)
-  
-        @message_response.save
-      @messages << @message_response
     end
 
   end

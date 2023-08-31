@@ -27,13 +27,13 @@
          
           <div class="flex flex-col space-y-1 mt-4 -mx-2 h-96 overflow-y-auto">
 
-          <div class="mt-5 text-center">
-            <%#= link_to "New Conversations", new_conversation_path, class: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-xl" %>
+          <div class="mt-5 mb-5 text-center">
+            <%= link_to "New Conversations", conversations_path, class: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-xl" %>
           </div>
 
             <% current_user.conversations&.reverse.each do |conversation| %> 
 
-              <%= link_to root_path(id: Base64.urlsafe_encode64(conversation.id.to_s)), class: "flex flex-row items-center hover:bg-gray-100 rounded-xl p-2" do %>
+              <%= link_to root_path(id: conversation.id), class: "flex flex-row items-center hover:bg-gray-100 rounded-xl p-2" do %>
                 
                 <div class="flex items-center justify-center h-8 w-8 bg-purple-200 rounded-full">
                   <%= conversation.user.email.first %>
@@ -55,8 +55,8 @@
           <div class="flex flex-col h-full">
           <turbo-frame id="messages">
             <div class="grid grid-cols-12 gap-y-2">
-              <% if @conversation_messages %>
-                <%= render @conversation_messages.messages %>
+              <% if @conversation %>
+                <%= render @conversation.messages %>
               <% end %>
             </div>
           </div>

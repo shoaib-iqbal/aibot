@@ -22,10 +22,9 @@
             >
             Ai
             </div>
-            <div
-            class="relative mr-3 text-sm bg-indigo-100 py-2 px-4 shadow rounded-xl"
-            >
-            <div><%= message.body %></div>
+            <div class="relative mr-3 text-sm bg-indigo-100 py-2 px-4 shadow rounded-xl">
+                <% message_class = (message.body == "Error: No Response From API") ? "text-red-500" : "" %>
+                <div class="<%= message_class %>"><%= message.body %></div>
             </div>
         </div>
     </div>

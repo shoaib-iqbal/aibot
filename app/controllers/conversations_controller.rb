@@ -2,7 +2,10 @@ class ConversationsController < ApplicationController
 
     def index
         @conversations = current_user&.conversations
-        @conversation = current_user&.conversations&.build
-        @conversation_messages = Conversation.find(Base64.urlsafe_decode64(params[:id])) if params[:id]
+        @conversation = if params[:id].present?
+            Conversation.find(params[:id])
+        else
+            current_user&.conversations&.build
+        end
     end
 end
